@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+        crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light py-0 px-5">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <span class="nav-link mr-auto" href="#">快乐购欢迎你！</span>
+                <ul class="navbar-nav" style="margin-right:0;">
+                    <li class="nav-item active">
+                    </li>
+                    <li class="nav-item">
+                        <a href="https://hbp1.happigo.com/csm/index.php?s=/Index" class="nav-link">合作招商</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"> 400-705-1111</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="https://hbp1.happigo.com/csm/index.php?s=/Index" class="nav-link" href="#">下载快乐购app</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            客服中心
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="http://www.happigo.com/news-43.html">帮助中心</a>
+                            <a class="dropdown-item" href="http://www.happigo.com/shop/index.php?act=member_feedback&amp;op=feedback_all">会员反馈</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container my-4">
+            <a href="/index">
+                <img src="/images/logo.jpg" alt="">
+            </a>
+        </div>
+        <hr class="my-0">
+        <div class="container mt-5">
+            <div v-if="plist.length==0">
+                <a href="/index">
+                    <img src="/images/kong.png" style="width:100%;height:auto">
+                </a>
+            </div>
+            <div v-else>
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>商品</th>
+                            <th>单价</th>
+                            <th>数量</th>
+                            <th>小计</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(p, index) in plist">
+                            <td scope="row">
+                                <img v-bind:src="p.img" style="height:100px;width:100px"> {{p.name}}
+                            </td>
+                            <td>￥ {{p.price}}</td>
+                            <td>
+                                <button v-on:click="jian(p,index)" type="button" class="btn btn-light mr-2">-</button>
+                                {{p.quantity}}
+                                <button v-on:click="jia(p,index)" type="button" class="btn btn-light ml-2">+</button>
+                            </td>
+                            <td style="color:red">￥ {{p.price*p.quantity}}</td>
+                            <td>
+                                <button v-on:click="det(p,index)" type="button" class="btn btn-warning">删除</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered mt-5 text-right">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>
+                                商品总价 ￥{{total}}
+                                <button v-on:click="sub" type="button" class="btn btn-danger">去结算</button>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div>
+            <img src="/images/blogo.png" style="height:auto;width:100%">
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                plist: [],
+                total: 0,
+            },
+            mounted: function () {
+                axios.get('/shopt')
+                    .then((response) => {
+                        this.plist = response.data;
+                        this.plist.forEach(p => {
+                            this.total += p.price * p.quantity
+                        });
+                    })
+                    .catch((error) => {})
+            },
+            methods: {
+                det: function (p, index) {
+                    this.plist.splice(index, 1),
+                        this.total -= p.price,
+                        axios.post('/delete', p)
+                        .then((response) => {})
+                        .catch((error) => {})
+                },
+                sub: function () {
+                    axios.post('/js', this.plist)
+                        .then((response) => {
+                            window.location.href = "/caa"
+                        })
+                        .catch((error) => {});
+                },
+                jia: function (p, index) {
+                    this.plist[index].quantity += 1;
+                        this.total += p.price;
+                        axios.post('/js', this.plist)
+                        .then((response) => {})
+                        .catch((error) => {});
+                },
+                jian: function (p, index) {
+                    if (this.plist[index].quantity > 1) {
+                        this.plist[index].quantity -= 1,
+                            this.total -= p.price,
+                            axios.post('/js', this.plist)
+                            .then((response) => {})
+                            .catch((error) => {});
+                    }
+                }
+            }
+        })
+    </script>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

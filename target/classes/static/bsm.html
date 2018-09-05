@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+        crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light py-0 px-5">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <span class="nav-link mr-auto" href="#">后台管理</span>
+        </div>
+    </nav>
+    <div class="container my-4">
+        <a href="/index">
+            <img src="/images/logo.jpg" alt="">
+        </a>
+    </div>
+    <hr class="my-0">
+    <div id="app" class="container mt-5">
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button v-on:click="um" type="button" class="btn btn-secondary">用户管理</button>
+            <button v-on:click="sm" type="button" class="btn btn-secondary">商品管理</button>
+        </div>
+        <table v-if="progress==0&&num==0" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>用户账号</th>
+                    <th>用户昵称</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(user, index) in users" :key="index">
+                    <td scope="row">{{user.id}}</td>
+                    <td>{{user.username}}</td>
+                    <td>
+                        <button v-on:click="ubj(user)" type="button" class="btn btn-warning">编辑</button>
+                        <button v-on:click="ud(user,index)" type="button" class="btn btn-danger">删除</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button v-on:click="uadd" type="button" class="btn btn-primary btn-lg btn-block">添加用户</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table v-if="progress==0&&num==2" class="table table-hover">
+            <tbody>
+                <tr>
+                    <td scope="row">用户账号</td>
+                    <td>
+                        <input type="text" v-model="id">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">用户昵称</td>
+                    <td>
+                        <input type="text" v-model="username">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">密码</td>
+                    <td>
+                        <input type="text" v-model="password">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">性别</td>
+                    <td>
+                        <input type="text" v-model="sex">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">生日</td>
+                    <td>
+                        <input type="text" v-model="date">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">电话</td>
+                    <td>
+                        <input type="text" v-model="phone">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">权限</td>
+                    <td>
+                        <input type="text" v-model="root">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">收货地址1</td>
+                    <td>
+                        <input type="text" v-model="address">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">地址2</td>
+                    <td>
+                        <input type="text" v-model="address1">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">地址3</td>
+                    <td>
+                        <input type="text" v-model="address2">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button v-on:click="uadd2" type="button" class="btn btn-success btn-lg btn-block">完成</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table v-if="progress==0&&num==1" class="table table-hover">
+            <tbody>
+                <tr>
+                    <td scope="row">用户账号</td>
+                    <td>{{user.id}}</td>
+                </tr>
+                <tr>
+                    <td scope="row">用户昵称</td>
+                    <td>
+                        <input type="text" v-model="user.username">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">密码</td>
+                    <td>
+                        <input type="text" v-model="user.password">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">性别</td>
+                    <td>
+                        <input type="text" v-model="user.sex">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">生日</td>
+                    <td>
+                        <input type="text" v-model="user.date">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">电话</td>
+                    <td>
+                        <input type="text" v-model="user.phone">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">权限</td>
+                    <td>
+                        <input type="text" v-model="user.root">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">收货地址1</td>
+                    <td>
+                        <input type="text" v-model="user.address">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">地址2</td>
+                    <td>
+                        <input type="text" v-model="user.address1">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">地址3</td>
+                    <td>
+                        <input type="text" v-model="user.address2">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button v-on:click="uxg" type="button" class="btn btn-success btn-lg btn-block">完成</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table v-if="progress==1&&num==0" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>商品图片</th>
+                    <th>商品名称</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(product, index) in products" :key="index">
+                    <td scope="row">
+                        <img v-bind:src="product.img" style="height:200px;width:200px">
+                    </td>
+                    <td>{{product.name}}</td>
+                    <td>
+                        <button v-on:click="pbj(product)" type="button" class="btn btn-warning">编辑</button>
+                        <button v-on:click="pd(product,index)" type="button" class="btn btn-danger">删除</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button v-on:click="uadd" type="button" class="btn btn-primary btn-lg btn-block">添加商品</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table v-if="progress==1&&num==2" class="table table-hover">
+            <tbody>
+                <tr>
+                    <td scope="row">商品编号</td>
+                    <td>
+                        <input type="text" v-model="pid">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">商品名称</td>
+                    <td>
+                        <input type="text" v-model="pname">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">商品信息</td>
+                    <td>
+                        <input type="text" v-model="info">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">商品价格</td>
+                    <td>
+                        <input type="text" v-model="price">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">库存数量</td>
+                    <td>
+                        <input type="text" v-model="quantity">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">图片地址</td>
+                    <td>
+                        <!-- <input type="file" class="form-control-file" id="exampleFormControlFile1" v-model="imgs"> -->
+                        <input type="text" v-model="img">
+                        <img v-bind:src="img" style="height:100px;width:100px">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button v-on:click="padd" type="button" class="btn btn-success btn-lg btn-block">完成</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table v-if="progress==1&&num==1" class="table table-hover">
+            <tbody>
+                <tr>
+                    <td scope="row">商品编号</td>
+                    <td>
+                        <input type="text" v-model="product.num">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">商品名称</td>
+                    <td>
+                        <input type="text" v-model="product.name">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">商品信息</td>
+                    <td>
+                        <input type="text" v-model="product.info">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">商品价格</td>
+                    <td>
+                        <input type="text" v-model="product.price">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">库存数量</td>
+                    <td>
+                        <input type="text" v-model="product.quantity">
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">图片地址</td>
+                    <td>
+                        <input type="text" v-model="product.img">
+                        <img v-bind:src="product.img" style="height:100px;width:100px">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button v-on:click="pxg" type="button" class="btn btn-success btn-lg btn-block">完成</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                progress: 0,
+                num: 0,
+                users: 0,
+                products: 0,
+                user: 0,
+                product: 0,
+                id: 0,
+                username: '',
+                password: '',
+                sex: '',
+                date: '',
+                phone: '',
+                root: 0,
+                address: '',
+                address1: '',
+                address2: '',
+                pid: 0,
+                pname: '',
+                info: '',
+                price: 0,
+                quantity: 0,
+                img: '',
+                imgs: ''
+            },
+            methods: {
+                um: function () {
+                    this.progress = 0;
+                    this.num = 0
+                },
+                sm: function () {
+                    this.progress = 1;
+                    this.num = 0
+                },
+                ud: function (user, index) {
+                    this.users.splice(index, 1)
+                    axios.post('/ud', user)
+                        .then((response) => {})
+                        .catch((error) => {})
+                },
+                pd: function (product, index) {
+                    this.products.splice(index, 1)
+                    axios.post('/pd', product)
+                        .then((response) => {})
+                        .catch((error) => {})
+                },
+                ubj: function (user) {
+                    this.num = 1;
+                    this.user = user
+                },
+                pbj: function (product) {
+                    this.num = 1;
+                    this.product = product
+                },
+                uxg: function () {
+                    axios.post('/uxg', this.user)
+                        .then(function (response) {})
+                        .catch(function (error) {});
+                    this.num = 0
+                },
+                pxg: function () {
+                    axios.post('/pxg', this.product)
+                        .then(function (response) {})
+                        .catch(function (error) {});
+                    this.num = 0
+                },
+                uadd: function () {
+                    this.num = 2
+                },
+                uadd2: function () {
+                    axios.post('/register1', {
+                            id: this.id,
+                            username: this.username,
+                            password: this.password,
+                            sex: this.sex,
+                            date: this.date,
+                            phone: this.phone,
+                            root: this.root,
+                            address: this.address,
+                            address1: this.address1,
+                            address2: this.address2
+                        })
+                        .then((response) => {})
+                        .catch((error) => {});
+                    this.num = 0
+                },
+                padd: function () {
+                    // console.log(this.imgs);
+
+                    axios.post('/padd', {
+                            num: this.pid,
+                            name: this.pname,
+                            info: this.info,
+                            price: this.price,
+                            quantity: this.quantity,
+                            img: this.img
+
+                        })
+                        .then((response) => {})
+                        .catch((error) => {});
+                    this.num = 0
+                },
+
+            },
+            mounted: function () {
+                axios.get('/alluser')
+                    .then((response) => {
+                        this.users = response.data;
+                    })
+                    .catch((error) => {}),
+                    axios.get('/allproduct')
+                    .then((response) => {
+                        this.products = response.data
+                    })
+                    .catch((error) => {})
+            },
+        })
+    </script>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
