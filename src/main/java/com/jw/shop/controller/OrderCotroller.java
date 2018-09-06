@@ -50,12 +50,7 @@ public class OrderCotroller {
 	
 	@PostMapping("/js")
 	public void js(HttpSession session,@RequestBody List<OrderInfo> list) {
-		for (OrderInfo orderInfo : list) {
-			Product product = impl.pslt(orderInfo);
-			int quantity = product.getQuantity()-orderInfo.getQuantity();
-			product.setQuantity(quantity);
-			impl.pxg(product);
-		}
+		
 		session.setAttribute("js", list);
 	}
 	
@@ -66,7 +61,13 @@ public class OrderCotroller {
 	}
 	
 	@PostMapping("/tj")
-	public void tj(HttpSession session) {
+	public void tj(HttpSession session,@RequestBody List<OrderInfo> list) {
+		for (OrderInfo orderInfo : list) {
+			Product product = impl.pslt(orderInfo);
+			int quantity = product.getQuantity()-orderInfo.getQuantity();
+			product.setQuantity(quantity);
+			impl.pxg(product);
+		}
 		Order order = new Order();
 		order.setUser_id((int) session.getAttribute("id"));
 		impl.tj(order);

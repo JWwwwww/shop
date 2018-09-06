@@ -134,7 +134,7 @@
             },
             methods: {
                 tj: function () {
-                    axios.post('/tj')
+                    axios.post('/tj',this.plist)
                         .then(function (response) {
                             window.location.href = "finish.html"
                         })
