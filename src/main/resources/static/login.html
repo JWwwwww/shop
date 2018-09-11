@@ -34,13 +34,15 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-6 col-sm-12">
-                                    <button v-on:click="login" type="button" data-toggle="modal" data-target="#login" class="btn btn-success btn-lg btn-block">登录</button>
+                                    <button v-on:click="login" type="button" data-toggle="modal" data-target="#login"
+                                        class="btn btn-success btn-lg btn-block">登录</button>
                                 </div>
                                 <div class="col-lg-6 col-sm-12">
                                     <button v-on:click="register" type="button" name="" id="" class="btn btn-primary btn-lg btn-block">注册</button>
                                 </div>
                             </div>
-                            <div v-if="isright!=1" class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div v-if="isright!=1" class="modal fade" id="login" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -51,7 +53,8 @@
                                             </button>
                                         </div>
                                         <div class="modal-footer">
-                                            <button v-on:click="con" type="button" class="btn btn-secondary" data-dismiss="modal">重新输入</button>
+                                            <button v-on:click="con" type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">重新输入</button>
                                         </div>
                                     </div>
                                 </div>
@@ -68,12 +71,14 @@
                             <div class="form-group">
                                 <input v-model="password1" type="password" class="form-control" placeholder="请输入密码">
                             </div>
-                            <button v-if="hasinfo1" v-on:click="register1" type="button" data-toggle="modal" data-target="#register" class="btn btn-primary btn-lg btn-block">注册</button>
-                            <button v-if="!hasinfo1" v-on:click="register1" type="button" data-toggle="modal" data-target="#register" class="btn btn-primary btn-lg btn-block"
-                                disabled>注册</button>
+                            <button v-if="hasinfo1" v-on:click="register1" type="button" data-toggle="modal"
+                                data-target="#register" class="btn btn-primary btn-lg btn-block">注册</button>
+                            <button v-if="!hasinfo1" v-on:click="register1" type="button" data-toggle="modal"
+                                data-target="#register" class="btn btn-primary btn-lg btn-block" disabled>注册</button>
                             <a v-on:click="dl" class="text-primary" style="cursor:pointer">已有账号，点击此处登录</a>
                             <!-- Modal -->
-                            <div v-if="isexist==1" class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div v-if="isexist==1" class="modal fade" id="register" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -86,12 +91,14 @@
                                             账号已存在，请重新注册！
                                         </div>
                                         <div class="modal-footer">
-                                            <button v-on:click="con" type="button" class="btn btn-secondary" data-dismiss="modal">继续注册</button>
+                                            <button v-on:click="con" type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">继续注册</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div v-if="isexist==0" class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div v-if="isexist==0" class="modal fade" id="register" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -104,8 +111,10 @@
                                             注册成功，你的的登录账号为：{{userid1}}
                                         </div>
                                         <div class="modal-footer">
-                                            <button v-on:click="con" type="button" class="btn btn-secondary" data-dismiss="modal">继续注册</button>
-                                            <button v-on:click="login1" type="button" class="btn btn-primary" data-dismiss="modal">登录</button>
+                                            <button v-on:click="con" type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">继续注册</button>
+                                            <button v-on:click="login1" type="button" class="btn btn-primary"
+                                                data-dismiss="modal">登录</button>
                                         </div>
                                     </div>
                                 </div>
@@ -156,23 +165,23 @@
                         })
                         .then((response) => {
                             this.isexist = response.data;
+                            if (this.isexist == 0) {
+                                axios.post('/register1', {
+                                        id: this.userid1,
+                                        username: this.username,
+                                        password: this.password1,
+                                    })
+                                    .then((response) => {
+                                        reg = response.data;
+                                    })
+                                    .catch((error) => {
+                                        console.log(error);
+                                    })
+                            }
                         })
                         .catch((error) => {
                             console.log(error);
                         })
-                    if (this.isexist == 0) {
-                        axios.post('/register1', {
-                                id: this.userid1,
-                                username: this.username,
-                                password: this.password1,
-                            })
-                            .then((response) => {
-                                reg = response.data;
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                            })
-                    }
                 },
                 dl: function () {
                     this.progress = 0
